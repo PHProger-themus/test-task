@@ -81,7 +81,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (Auth::user()->role == 1) {
+        if (Auth::user()->role == 2) {
             $rules = [
                 'price' => 'required|numeric',
                 'status' => 'required',
