@@ -21,10 +21,10 @@
     @foreach($orders as $order)
         <tr>
             <td>{{ $order->id }}</td>
-            <td>{{ $order->name }}</td>
-            <td>{{ $order->street }}</td>
-            <td>{{ $order->num }}</td>
-            <td>{{ $order->manager }}</td>
+            <td>{{ $order->user->name }}</td>
+            <td>{{ $order->point->street }}</td>
+            <td>{{ $order->scooter->num }}</td>
+            <td>{{ $order->manager->name ?? "-" }}</td>
             <td>{{ $order->price }}</td>
             <td>{{ $order->status }}</td>
             <td>{{ $order->collateral }}</td>

@@ -6,7 +6,7 @@
             @csrf
             <div class="inputs">
                 <label for="nickname">Имя:</label>
-                @error('email')
+                @error('name')
                 <p class="error">{{ $message }}</p>
                 @enderror
                 <input type="text" name="name" class="auth_input" value="{{ old('name') }}" />

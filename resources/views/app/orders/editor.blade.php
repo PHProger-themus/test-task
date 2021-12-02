@@ -3,7 +3,7 @@
     <form method="POST" class="p_form" action="{{ route('orders.update', ['order' => $order->id]) }}">
         @method('PUT')
         @csrf
-        @error('num')
+        @error('price')
         <div class="input_error">{{ $message }}</div>
         @enderror
         <label>

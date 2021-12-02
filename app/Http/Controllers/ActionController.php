@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Scooter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -10,8 +11,7 @@ class ActionController extends Controller
 
     public function getScooters(Request $request)
     {
-        return json_encode(DB::table('scooters')
-            ->select(['id', 'num'])
+        return json_encode(Scooter::select('id', 'num')
             ->where('point_id', '=', $request->post('point_id'))
             ->orderBy('id')
             ->get());

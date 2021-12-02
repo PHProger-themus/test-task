@@ -2,17 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\AppRepository;
+use App\Repositories\OrderRepository;
+use App\Repositories\PointRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class AppController extends Controller
 {
 
+    /**
+     * @var UserRepository
+     */
     private $userRepository;
-    private $appRepository;
+    /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
+    /**
+     * @var PointRepository
+     */
+    private $pointRepository;
     private $roles = [
         'client',
         'admin',
@@ -22,7 +32,8 @@ class AppController extends Controller
     public function __construct()
     {
         $this->userRepository = app(UserRepository::class);
-        $this->appRepository = app(AppRepository::class);
+        $this->orderRepository = app(OrderRepository::class);
+        $this->pointRepository = app(PointRepository::class);
     }
 
     public function dashboard(Request $request)
@@ -35,18 +46,18 @@ class AppController extends Controller
     private function adminDashboard()
     {
         return view('app.admin-dashboard', [
-            'orders' => $this->appRepository->getOrders(),
-            'managersInfo' => $this->appRepository->getManagersInfo(),
-            'pointsInfo' => $this->appRepository->getPointsInfo(),
-            'scootersInfo' => $this->appRepository->getScootersInfo(),
-            'clientsInfo' => $this->appRepository->getClientsInfo()
+            'orders' => $this->orderRepository->getOrders(),
+            'managersInfo' => $this->orderRepository->getManagersInfo(),
+            'pointsInfo' => $this->orderRepository->getPointsInfo(),
+            'scootersInfo' => $this->orderRepository->getScootersInfo(),
+            'clientsInfo' => $this->orderRepository->getClientsInfo()
         ]);
     }
 
     private function managerDashboard()
     {
         return view('app.manager-dashboard', [
-            'orders' => $this->appRepository->getOrders()
+            'orders' => $this->orderRepository->getOrders()
         ]);
     }
 
@@ -54,9 +65,9 @@ class AppController extends Controller
     {
         $currentId = Auth::id();
         return view('app.client-dashboard', [
-            'orders' => $this->appRepository->getOrdersByUser($currentId),
-            'points' => $this->appRepository->getPoints(),
-            'activeOrder' => $this->appRepository->getActiveOrder($currentId)
+            'orders' => $this->orderRepository->getOrdersByUser($currentId),
+            'activeOrder' => $this->orderRepository->getActiveOrder($currentId),
+            'points' => $this->pointRepository->getPoints()
         ]);
     }
 }

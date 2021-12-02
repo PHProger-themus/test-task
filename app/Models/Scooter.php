@@ -11,4 +11,16 @@ class Scooter extends Model
 
     public $timestamps = false;
 
+    protected $fillable = [
+        'num',
+        'point_id',
+        'booked_by',
+        'booked_at',
+    ];
+
+    public function point()
+    {
+        return $this->belongsTo(Point::class);
+    }
+
 }

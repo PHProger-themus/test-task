@@ -2,114 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\AppRepository;
+use App\Http\Requests\StoreScooterRequest;
+use App\Http\Requests\UpdateScooterRequest;
+use App\Models\Scooter;
+use App\Repositories\PointRepository;
+use App\Repositories\ScooterRepository;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class ScooterController extends Controller
 {
 
-    private $appRepository;
+    /**
+     * @var ScooterRepository
+     */
+    private $scooterRepository;
+    /**
+     * @var PointRepository
+     */
+    private $pointRepository;
     private const CREATE = 0;
     private const EDIT = 1;
 
     public function __construct()
     {
-        $this->appRepository = app(AppRepository::class);
+        $this->scooterRepository = app(ScooterRepository::class);
+        $this->pointRepository = app(PointRepository::class);
     }
 
     public function index()
     {
         return view('app.scooters.index', [
-            'scooters' => $this->appRepository->getScooters()
+            'scooters' => $this->scooterRepository->getScooters()
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     */
     public function create()
     {
         return view('app.scooters.editor', [
-            'mode' => self::CREATE,
-            'points' => $this->appRepository->getPoints()
+            'mode' => ScooterController::CREATE,
+            'points' => $this->pointRepository->getPoints()
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     */
-    public function store(Request $request)
+    public function store(StoreScooterRequest $request)
     {
-        $rules = [
-            'num' => 'required|unique:scooters,num',
-            'point' => 'required|numeric',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        DB::table('scooters')->insert([
-            'num' => $request->post('num'),
-            'point_id' => $request->post('point'),
-        ]);
+        $inputs = $request->validated();
+        $this->scooterRepository->storeScooter($inputs);
         return redirect()->route('scooters.index');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     */
-    public function edit($id)
+    public function edit(Scooter $scooter)
     {
         return view('app.scooters.editor', [
-            'mode' => self::EDIT,
-            'scooter' => $this->appRepository->getScooter($id),
-            'points' => $this->appRepository->getPoints()
+            'mode' => ScooterController::EDIT,
+            'scooter' => $scooter,
+            'points' => $this->pointRepository->getPoints()
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     */
-    public function update(Request $request, $id)
+    public function update(UpdateScooterRequest $request, Scooter $scooter)
     {
-        $rules = [
-            'num' => 'required|unique:scooters,num,' . $id,
-            'point' => 'required|numeric',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        DB::table('scooters')->where('id', '=', $id)->update([
-            'num' => $request->post('num'),
-            'point_id' => $request->post('point'),
-        ]);
+        $inputs = $request->validated();
+        $this->scooterRepository->updateScooter($scooter, $inputs);
         return redirect()->route('scooters.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     */
-    public function destroy($id)
+    public function destroy(Scooter $scooter)
     {
         try {
-            DB::table('scooters')->where('id', '=', $id)
-                ->delete();
+            $this->scooterRepository->destroyScooter($scooter);
             return redirect()->route('scooters.index');
         } catch (QueryException $e) {
             return back()->withErrors(['error' => 'Ошибка удаления записи']);

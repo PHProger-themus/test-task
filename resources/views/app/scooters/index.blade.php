@@ -19,7 +19,7 @@
             <tr>
                 <td>{{ $scooter->id }}</td>
                 <td>{{ $scooter->num }}</td>
-                <td>{{ $scooter->street }}</td>
+                <td>{{ $scooter->point->street }}</td>
                 <td>{{ $scooter->booked_by }}</td>
                 <td>{{ $scooter->booked_at }}</td>
                 <td class="action_section">

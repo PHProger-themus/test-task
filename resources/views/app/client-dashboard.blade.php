@@ -14,9 +14,9 @@
     @foreach($orders as $order)
         <tr>
             <td>{{ $order->id }}</td>
-            <td>{{ $order->street }}</td>
-            <td>{{ $order->num }}</td>
-            <td>{{ $order->name ?? "-" }}</td>
+            <td>{{ $order->point->street }}</td>
+            <td>{{ $order->scooter->num }}</td>
+            <td>{{ $order->manager->name ?? "-" }}</td>
             <td>{{ $order->price ?? "не задана" }}</td>
             <td>{{ $order->status }}</td>
             <td>{{ $order->date }}</td>
@@ -40,8 +40,8 @@
             </tr>
             <tr>
                 <td>{{ $activeOrder->id }}</td>
-                <td>{{ $activeOrder->street }}</td>
-                <td>{{ $activeOrder->num }}</td>
+                <td>{{ $activeOrder->point->street }}</td>
+                <td>{{ $activeOrder->scooter->num }}</td>
                 <td>{{ $activeOrder->name != null ? $activeOrder->name : "-" }}</td>
                 <td>{{ $activeOrder->price != null ? $activeOrder->price : "не задана" }}</td>
                 <td class="status_st">{{ $activeOrder->status }}</td>
