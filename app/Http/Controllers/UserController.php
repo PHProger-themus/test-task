@@ -6,12 +6,9 @@ use App\Http\Requests\AuthRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
-use App\Repositories\AppRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
